@@ -6,3 +6,5 @@ settings.json
 *.sqlite3
 **/venv/**
 .env
+.DS_Store
+.vscode
