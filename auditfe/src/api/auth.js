@@ -11,7 +11,7 @@ class AuthClient {
             status: this.SUCCESS,
             data: {
                 user: { username: "Samad" },
-                token: { access: "", refresh: "" }
+                token: { access: "aaa", refresh: "bbb" }
             }
         })
     }
@@ -19,7 +19,7 @@ class AuthClient {
     async validateToken(token) {
         await this.sleep(2000)
         return({
-            status: this.FAILURE
+            status: this.SUCCESS
         })
     }
 

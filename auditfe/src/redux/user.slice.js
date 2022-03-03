@@ -4,24 +4,24 @@ export const userSlice = createSlice(
     {
         name: 'user',
         initialState: {
-            username: "",
-            token: {access: "", refresh: ""}
+            user: {username: ""},
+            token: {access: null, refresh: null}
         },
         reducers: {
-            setUser: (state, action) => {
-                state.username = action.payload.username
+            setUserAndToken: (state, action) => {
+                state.user = action.payload.usern
                 state.token = action.payload.token
             },
             setToken: (state, action) => {
                 state.token = action.payload.token
             },
             logout: (state) => {
-                state.username = ""
-                state.token = ""
+                state.user = {username: ""}
+                state.token = {access: null, refresh: null}
             }
         }
     }
 )
 
-export const { setUser, setToken, logOut } = userSlice.actions
+export const { setUserAndToken, setToken, logOut } = userSlice.actions
 export default userSlice.reducer

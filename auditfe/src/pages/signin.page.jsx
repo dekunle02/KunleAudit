@@ -1,3 +1,8 @@
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux'
+import { setUserAndToken } from "../redux/user.slice"
+
+
 import { Formik } from "formik";
 import { signInSchema } from "../configs/validation-schemas";
 import { toastConfig } from "../configs/toast-config";
@@ -8,6 +13,8 @@ import { ReactComponent as Logo } from '../assets/logo.svg';
 import getAuth from '../api/auth'
 
 function SignInPage() {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleSubmit = (values) => {
         const auth = getAuth()
@@ -19,6 +26,9 @@ function SignInPage() {
                     type: "success",
                     isLoading: false,
                 });
+                const {user, token} = response.data
+                dispatch(setUserAndToken({user:user, token:token}));
+                navigate("/", { replace: true })
             } else {
                 toast.update(toastId, {
                     render: `Something went wrong...`,
@@ -31,7 +41,7 @@ function SignInPage() {
 
     return (
         <div className="w-screen h-screen">
-            <div className="w-full min-h-min m-10 px-5 pb-20 md:shadow-2xl md:w-3/4 md:mx-auto lg:w-1/2 rounded">
+            <div className="w-full min-h-min px-5 pb-20 md:shadow-2xl md:w-3/4 md:mx-auto lg:w-1/2 rounded">
                 <Logo className="h-20 mb-24" />
                 <h2 className="font-semibold text-4xl text-colorPrimary">Sign In</h2>
                 <div className="my-10">

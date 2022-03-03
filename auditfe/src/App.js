@@ -5,8 +5,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import SignInPage from "./pages/signin.page"
 import MainLayout from "./pages/main.layout"
-import DashboardPage from "./pages/app/dashboard.page"
 import NotFoundPage from "./pages/not-found.page";
+
+import HomePage from "./pages/app/home.page"
+import ProjectsPage from "./pages/app/projects.page"
+import TransactionsPage from "./pages/app/transactions.page"
+import ClientsPage from "./pages/app/clients.page"
 
 
 function App() {
@@ -16,7 +20,10 @@ function App() {
       <Routes>
         <Route path="signin" element={<SignInPage />} />
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<DashboardPage />} />
+          <Route index element={<HomePage />} />
+          <Route path="projects" element={<ProjectsPage />} />
+          <Route path="transactions" element={<TransactionsPage />} />
+          <Route path="clients" element={<ClientsPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

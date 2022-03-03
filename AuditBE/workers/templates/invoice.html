@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Receipt</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="logo-header">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="company" class="logo-image"/>  
+</div>
+<p>Dear {name},</p>
+    <p>We are happy to receive your message. Please take note of your reference number {reference_number}. A member of the team will be in contact in 3-5 working days.</p>
+    <p>In the meantime, you can kindly check our <a href="https:\\www.googoogle.com">FAQs</a>  to see if your question has been answered already.
+</p> 
+    <p>Thank you</p>
+    <p>{company_name} team</p>
+    {for address in addresses}
+    <p>{address}</p>
+    {endfor}
+</body>
+</html>

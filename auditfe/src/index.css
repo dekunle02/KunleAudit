@@ -9,4 +9,5 @@
   .button-primary-inverse {
     @apply bg-colorPrimary text-colorWhite rounded hover:drop-shadow-lg hover:scale-105 ease-in duration-300 font-semibold;
   }
+
 }
