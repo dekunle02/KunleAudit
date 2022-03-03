@@ -6,7 +6,7 @@ class AuthClient {
     }
 
     async signIn() {
-        await this.sleep(2000)
+        await this.sleep(1000)
         return ({
             status: this.SUCCESS,
             data: {
@@ -17,11 +17,16 @@ class AuthClient {
     }
 
     async validateToken(token) {
-        await this.sleep(2000)
-        return({
-            status: this.SUCCESS
-        })
-    }
+        await this.sleep(1000)
+        if (token.access) {
+            return({
+                status: this.SUCCESS
+            })
+        } else{
+            return ({status:this.FAILURE})
+        }
+        
+    }s
 
 }
 const getAuth = () => new AuthClient()

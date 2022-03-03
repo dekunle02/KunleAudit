@@ -7,7 +7,7 @@ function MainLayout() {
     return (
         <AuthProvider>
             <Navbar />
-            <div className='relative scroll-smooth'>
+            <div className='relative scroll-smooth px-5 pt-2 pb-10'>
                 <Outlet />
             </div>
         </AuthProvider>
