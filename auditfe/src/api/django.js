@@ -17,7 +17,7 @@ class DjangoClient {
             status: this.SUCCESS,
             data: {
                 id: 1,
-                title: "",
+                title: "The Fishermen",
                 client: {
                     id: "1",
                     name: "Macmillan",
@@ -30,6 +30,8 @@ class DjangoClient {
                 },
                 start_date: "2022-01-01",
                 end_date: null,
+                fee: 1500.00,
+                fee_currency: "USD",
                 in_progress: true,
                 paintings: [
                     { id: 1, name: "The Girl with the Pearl earring", price: "$450.00" }
@@ -156,7 +158,12 @@ class DjangoClient {
         })
     }
 
-
+    async listCurrencies() {
+        return {
+            status: this.SUCCESS,
+            data: ['USD, EUR, NGN, GBP']
+        }
+    }
 
     async getClientById(clientId) {
         await this.sleep(2000)

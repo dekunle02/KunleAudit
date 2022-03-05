@@ -6,8 +6,13 @@
   .button-primary {
     @apply bg-colorSecondary text-colorPrimary rounded hover:drop-shadow-md font-semibold hover:scale-105 ease-in duration-200;
   }
+
   .button-primary-inverse {
     @apply bg-colorPrimary text-colorWhite rounded hover:drop-shadow-md font-semibold hover:scale-105 ease-in duration-200;
+  }
+
+  .button-icon {
+    @apply flex-row flex items-center gap-x-2 py-1 px-2 text-lg rounded hover:drop-shadow-md ease-in-out duration-150;
   }
 
   .card {

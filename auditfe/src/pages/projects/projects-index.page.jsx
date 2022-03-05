@@ -107,6 +107,7 @@ function ProjectsIndex() {
 
     return (
         <div className="flex flex-col my-2 page-margins">
+ 
             <h1 className="text-colorPrimary/50 font-semibold text-xl mb-5">Summary</h1>
 
             <div className="flex flex-row flex-wrap gap-2">
@@ -148,14 +149,14 @@ function ProjectsIndex() {
                         placeholder="search projects.."
                     />
                 </div>
-                <Link to="new" className="button-primary flex flex-row items-center rounded-full p-2 px-3 gap-x-2">
+                <Link to="new" className="button-icon rounded-full bg-colorSecondary text-colorPrimary">
                     <MdOutlineAddCircleOutline className="inline text-lg" />
                     <span>Create</span>
                 </Link>
             </div>
 
 
-            <div className="flex flex-col gap-y-2 max-h-[40rem] overflow-auto px-2">
+            <div className="flex flex-col gap-y-2 max-h-[40rem] overflow-auto p-2">
                 {projectArr.map(project => <ProjectCard key={project.id} project={project} />)}
             </div>
 

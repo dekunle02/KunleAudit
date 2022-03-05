@@ -32,7 +32,8 @@ function Navbar() {
                                 {item.text}
                             </NavLink>
                         ))}
-                        <Link to="/signout" className="bg-colorPrimary text-colorSecondary rounded hover:drop-shadow-md hover:scale-105 ease-in duration-200 text-base font-normal px-2">Sign Out</Link>
+                        <Link to="/signout"
+                            className="bg-colorRed text-colorWhite/80 hover:text-colorWhite rounded hover:drop-shadow-md  text-base font-normal px-2">Sign Out</Link>
                     </div>
 
                     <div className="md:hidden">
@@ -58,8 +59,12 @@ function Navbar() {
                                 {item.text}
                             </NavLink>
                         ))}
-                        <Link to="/signout" className="text-center bg-colorPrimary text-colorSecondary rounded-full hover:drop-shadow-md hover:scale-105 ease-in duration-200 text-base font-normal py-1">Sign Out</Link>
-
+                        <div>
+                            <Link to="/signout"
+                                className="bg-colorRed text-colorWhite/80 py-1 px-3 rounded hover:text-colorWhite  hover:drop-shadow-md text-base font-normal">
+                                Sign Out
+                            </Link>
+                        </div>
                     </div>
                 )}
             </div>
