@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer components {
+  .popup-child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
   .button-primary {
     @apply bg-colorSecondary text-colorPrimary rounded hover:drop-shadow-md font-semibold hover:scale-105 ease-in duration-200;
   }

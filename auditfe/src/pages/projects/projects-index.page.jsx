@@ -6,7 +6,9 @@ import { toastConfig } from "../../configs/toast-config";
 import { toast } from "react-toastify";
 import Chart from 'react-apexcharts'
 
+import { usePeriod } from "../../context/period.context"
 import { CgOpenCollective } from 'react-icons/cg'
+import { BsStars } from "react-icons/bs"
 import { MdOutlineDoneAll, MdOutlineAddCircleOutline } from 'react-icons/md'
 
 import { groupBy } from "../../configs/utils";
@@ -17,88 +19,71 @@ import { FormInput } from "../../components/form-input.component";
 
 function ProjectsIndex() {
     const token = useSelector(state => state.user.token)
+    const period = usePeriod()
     const [projectArr, setProjectArr] = useState([])
     const [searchParams, setSearchParams] = useState("")
+    const [totalProjectCount, setTotalProjectCount] = useState(0)
 
     useEffect(() => {
         const django = getDjango(token)
-        django.listProjects().then(response => {
+        django.listProjects(period).then(response => {
             if (response.status === django.SUCCESS) {
                 setProjectArr(response.data)
             } else {
                 console.log("Error=>", response.data)
-                toast.error("Unable to get Project", toastConfig)
+                toast.error("Unable to get Projects", toastConfig)
             }
         })
     }, [token])
 
-    const makeTypeChartArrs = () => {
-        // function converts object like {type1: [{obj},...],...},
-        // to {types:[type1,type2,...], count:[int, int, int]}
-        const projectsGroupedByType = groupBy("type", projectArr)
-        const types = []
-        const values = []
-        Object.entries(projectsGroupedByType).forEach(item => {
-            const [key, valueArr] = item
-            types.push(key)
-            values.push(valueArr.length)
+    useEffect(() => {
+        const django = getDjango(token)
+        django.getAllTimeProjectCount().then(response => {
+            if (response.status === django.SUCCESS) {
+                setTotalProjectCount(response.data)
+            } else {
+                toast.error("Unable to get Projects", toastConfig)
+            }
         })
-        return { types: types, count: values }
+
+    })
+
+
+    const makeTreeChartArr = () => {
+        // converts object like {type1: [{obj},...]...} into 
+        // [{x: type1, y: count}....]
+        const projectsGroupedByType = groupBy("type", projectArr)
+        const treeArr = []
+        for (const [key, value] of Object.entries(projectsGroupedByType)) {
+            treeArr.push({ x: key, y: value.length })
+        }
+        return treeArr
     }
+
 
     const inProgressProjectArr = projectArr.filter(project => project.in_progress)
 
     const chartConfig = {
         options: {
             chart: {
-                id: `donut-${Math.random()}` // should be a different one every re-render
+                id: `donut-${Math.random()}`, // should be a different one every re-render
+                type: "treemap",
+                height: 350,
+                toolbar: {
+                    show: false
+                }
             },
             plotOptions: {
-                pie: {
-                    donut: {
-                        labels: {
-                            show: true,
-                            name: {
-                                show: true,
-                                fontSize: '14px',
-                                fontWeight: 600,
-                            },
-                            value: {
-                                show: true,
-                                fontSize: '22px',
-                                fontWeight: 400,
-                            },
-                            total: {
-                                show: true,
-                                showAlways: false,
-                                label: 'Total',
-                                fontSize: '14px',
-                                fontWeight: 600,
-                                color: '#373d3f',
-                            }
-                        }
-                    }
+                treemap: {
+                    distributed: true
                 }
             },
             dataLabels: {
                 enabled: false
             },
-
-            colors: ['#00204E', '#CDE6FF', '#F26419', '#C5D86D'],
-
-            legend: {
-                markers: {
-                    width: 15,
-                    height: 15,
-                    strokeWidth: 0,
-                    radius: 0,
-                },
-            },
-            labels: makeTypeChartArrs().types
         },
-        series: makeTypeChartArrs().count
+        series: [{ data: makeTreeChartArr() }]
     }
-
 
     const handleSearchQueryChange = event => {
         setSearchParams(event.target.value)
@@ -107,40 +92,37 @@ function ProjectsIndex() {
 
     return (
         <div className="flex flex-col my-2 page-margins">
- 
+
             <h1 className="text-colorPrimary/50 font-semibold text-xl mb-5">Summary</h1>
 
-            <div className="flex flex-row flex-wrap gap-2">
-                <div className="card p-4 w-40 bg-colorSecondaryVariant text-colorWhite">
+            <div className="flex flex-row flex-wrap gap-3">
+                <div className="card p-4 w-40  h-72 bg-colorSecondaryVariant text-colorWhite flex flex-col">
                     <CgOpenCollective className="h-5 w-5" />
-                    <br />
-                    <br />
-                    <h2 className="text-4xl font-bold">{inProgressProjectArr.length}</h2>
-                    <br />
+                    <h2 className="text-6xl font-bold flex-grow my-16">{inProgressProjectArr.length}</h2>
                     <h6>In progress</h6>
-                    <h6>Projects</h6>
                 </div>
-                <div className="card p-4 w-40 bg-colorSecondary text-colorBlack">
+                <div className="card p-4 w-40 h-72 bg-colorSecondary text-colorBlack flex flex-col">
                     <MdOutlineDoneAll className="h-5 w-5" />
-                    <br />
-                    <br />
-                    <h2 className="text-4xl font-bold">{projectArr.length - inProgressProjectArr.length}</h2>
-                    <br />
-                    <h6>Completed</h6>
-                    <h6>Projects</h6>
+                    <h2 className="text-6xl font-bold flex-grow my-16">{projectArr.length - inProgressProjectArr.length}</h2>
+                    <h6>Completed Projects</h6>
                 </div>
 
-                <div className="card p-4">
-                    <Chart options={chartConfig.options} series={chartConfig.series} type="donut" />
-                    <br />
+                <div className="card p-4 w-full md:w-40 h-72 bg-colorGreen text-colorWhite flex flex-col">
+                    <BsStars className="h-5 w-5" />
+                    <h2 className="text-7xl md:text-6xl  font-bold flex-grow my-16 mx-auto md:mx-0 ">{totalProjectCount}</h2>
+                    <h6>All time Projects</h6>
+                </div>
+
+                <div className="card">
                     <h6 className="text-colorPrimary font-semibold">Project categories</h6>
+                    <Chart options={chartConfig.options} series={chartConfig.series} type="treemap" height="220" width="320" />
                 </div>
 
             </div>
 
-            <div className="flex flex-row justify-between items-center  my-5 flex-wrap  ">
-                <h1 className="text-colorPrimary/50 font-semibold text-xl flex-grow">All Projects</h1>
-                <div className="w-1/2 mx-2">
+            <div className="flex flex-row justify-between items-center mt-20 flex-wrap  ">
+                <h1 className="text-colorPrimary/50 font-semibold text-2xl flex-grow">All Projects</h1>
+                <div className="w-1/2 mx-5">
                     <FormInput
                         id="search-projects"
                         type="search"
@@ -151,7 +133,7 @@ function ProjectsIndex() {
                 </div>
                 <Link to="new" className="button-icon rounded-full bg-colorSecondary text-colorPrimary">
                     <MdOutlineAddCircleOutline className="inline text-lg" />
-                    <span>Create</span>
+                    <span>Add New Project</span>
                 </Link>
             </div>
 
@@ -160,7 +142,7 @@ function ProjectsIndex() {
                 {projectArr.map(project => <ProjectCard key={project.id} project={project} />)}
             </div>
 
-        </div>
+        </div >
     )
 
 }

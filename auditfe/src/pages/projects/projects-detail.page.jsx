@@ -51,7 +51,6 @@ function ProjectDetailPage() {
     }
 
 
-
     return (
         <div className="page-margins my-2">
             {project ?
@@ -72,11 +71,11 @@ function ProjectDetailPage() {
                     {/* FEE INFO */}
                     <div className="bg-colorSecondary p-5 text-colorPrimary rounded">
                         <h3>Fee</h3>
-                        <EditableOptions>
+                        {/* <EditableOptions>
                             {currencyArr.map(currency => (
                                 <option key={currency}>{currency}</option>
                             ))}
-                        </EditableOptions>
+                        </EditableOptions> */}
                         <span className="font-bold text-2xl">{project.fee_currency} </span>
                         <EditableInput
                             className="font-bold text-2xl"

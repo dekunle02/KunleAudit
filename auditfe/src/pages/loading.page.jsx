@@ -10,8 +10,10 @@ function LoadingPage() {
 
     const { View } = useLottie(lottieOptions);
     return (
-        <div className="mx-auto my-auto w-1/2 md:w-1/3 lg:w-1/4" >
-            {View}
+        <div className="w-screen h-screen z-30 fixed top-0 right-0 bg-colorWhite">
+            <div className="popup-child md:w-[30vw]" >
+                {View}
+            </div>
         </div>
     )
 }

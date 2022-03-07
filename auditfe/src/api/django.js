@@ -40,7 +40,7 @@ class DjangoClient {
         })
     }
 
-    async listProjects() {
+    async listProjects(period) {
         await this.sleep(1000)
         return ({
             status: this.SUCCESS,
@@ -64,7 +64,7 @@ class DjangoClient {
                     paintings: [
                         { id: 1, name: "The Girl with the Pearl earring", price: "$450.00" }
                     ],
-                    type:"Book Cover"
+                    type: "Book Cover"
                 },
 
                 {
@@ -86,7 +86,7 @@ class DjangoClient {
                     paintings: [
                         { id: 1, name: "The Old man and the Sea", price: "£1,200.00" }
                     ],
-                    type:"Book Cover"
+                    type: "Book Cover"
 
                 },
                 {
@@ -108,7 +108,7 @@ class DjangoClient {
                     paintings: [
                         { id: 1, name: "The Old man and the Sea", price: "£1,200.00" }
                     ],
-                    type:"Album Cover"
+                    type: "Album Cover"
 
                 },
                 {
@@ -130,7 +130,7 @@ class DjangoClient {
                     paintings: [
                         { id: 2, name: "The Old man and the Sea", price: "$1,000.00" }
                     ],
-                    type:"Other"
+                    type: "Other"
 
                 },
                 {
@@ -152,12 +152,19 @@ class DjangoClient {
                     paintings: [
                         { id: 2, name: "The Old man and the Sea", price: "$1,000.00" }
                     ],
-                    type:"Private"
+                    type: "Private"
                 },
             ]
         })
     }
 
+    async getAllTimeProjectCount() {
+        await this.sleep(1000)
+        return ({
+            status: this.SUCCESS,
+            data: 47
+        })
+    }
     async listCurrencies() {
         return {
             status: this.SUCCESS,

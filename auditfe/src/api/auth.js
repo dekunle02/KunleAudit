@@ -19,14 +19,14 @@ class AuthClient {
     async validateToken(token) {
         await this.sleep(1000)
         if (token.access) {
-            return({
+            return ({
                 status: this.SUCCESS
             })
-        } else{
-            return ({status:this.FAILURE})
+        } else {
+            return ({ status: this.FAILURE })
         }
-        
-    }s
+
+    } s
 
 }
 const getAuth = () => new AuthClient()

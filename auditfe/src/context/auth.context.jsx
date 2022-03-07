@@ -4,8 +4,8 @@ import {
     useLocation,
 } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import getAuth from '../../api/auth'
-import LoadingPage from '../../pages/loading.page'
+import getAuth from '../api/auth'
+import LoadingPage from '../pages/loading.page'
 
 const AuthContext = React.createContext()
 

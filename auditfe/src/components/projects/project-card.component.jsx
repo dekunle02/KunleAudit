@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 function ProjectCard({ project }) {
     return (
-        <div className="card drop-shadow-md w-full flex">
+        <div className="card drop-shadow-md h-28">
             <div className={`${project.in_progress ? "bg-colorSecondaryVariant" : "bg-colorSecondary"} rounded w-3 h-3 m-2`}></div>
             <div className="grid grid-cols-2 grid-rows-2 w-full mr-2">
                 <Link to={`/projects/${project.id}`} className="font-light hover:font-medium" >{project.title}</Link>
