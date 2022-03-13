@@ -19,7 +19,7 @@
   }
 
   .button-icon {
-    @apply flex-row flex items-center gap-x-2 py-1 px-2 text-lg rounded hover:drop-shadow-md ease-in-out duration-150;
+    @apply flex-row flex items-center  gap-x-2 py-1 px-2 text-lg rounded hover:drop-shadow-md ease-in-out duration-150;
   }
 
   .card {

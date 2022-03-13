@@ -34,7 +34,8 @@ class DjangoClient {
                 fee_currency: "USD",
                 in_progress: true,
                 paintings: [
-                    { id: 1, name: "The Girl with the Pearl earring", price: "$450.00" }
+                    { id: 1, name: "The Girl with the Pearl Earring", price: "400" },
+                    { id: 2, name: "Manchester by the Sea", price: "1100" }
                 ]
             }
         })
@@ -158,6 +159,15 @@ class DjangoClient {
         })
     }
 
+    async updateProject(projectId, formData) {
+        await this.sleep(1000)
+        console.log("formData => ", formData)
+        return ({
+            status: this.SUCCESS,
+            data: { message: "Update Successful" }
+        })
+    }
+
     async getAllTimeProjectCount() {
         await this.sleep(1000)
         return ({
@@ -186,6 +196,32 @@ class DjangoClient {
                 address_line_3: "Osun State, Nigeria",
                 vendor_number: "X22304TY"
             }
+        })
+    }
+
+    async updatePainting(paintingId, formData) {
+        await this.sleep(1000)
+        console.log("formData => ", formData)
+        return ({
+            status: this.SUCCESS,
+            data: { message: "Update Successful" }
+        })
+    }
+
+    async addPainting(projectId, formData) {
+        await this.sleep(1000)
+        console.log("formData => ", formData)
+        return ({
+            status: this.SUCCESS,
+            data: { message: "Painting added" }
+        })
+    }
+
+    async downloadInvoice(projectId) {
+        await this.sleep(1000)
+        return ({
+            status: this.FAILURE,
+            data: { message: "Internal server error" }
         })
     }
 

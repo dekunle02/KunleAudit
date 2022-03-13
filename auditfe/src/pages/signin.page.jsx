@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux'
 import { setUserAndToken } from "../redux/user.slice"
 
-
 import { Formik } from "formik";
 import { signInSchema } from "../configs/validation-schemas";
 import { toastConfig } from "../configs/toast-config";
@@ -26,8 +25,8 @@ function SignInPage() {
                     type: "success",
                     isLoading: false,
                 });
-                const {user, token} = response.data
-                dispatch(setUserAndToken({user:user, token:token}));
+                const { user, token } = response.data
+                dispatch(setUserAndToken({ user: user, token: token }));
                 navigate("/", { replace: true })
             } else {
                 toast.update(toastId, {

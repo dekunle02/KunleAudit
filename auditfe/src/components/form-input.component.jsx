@@ -1,67 +1,93 @@
-import { useState } from 'react'
-import { IoAlertCircleSharp } from 'react-icons/io5'
-import { GrFormViewHide } from 'react-icons/gr'
-import { GrFormView } from 'react-icons/gr'
+import { GrFormView } from "react-icons/gr";
+import { GrFormViewHide } from "react-icons/gr";
+import { IoAlertCircleSharp } from "react-icons/io5";
+import { useState } from "react";
 
+function FormInput({
+    id,
+    label,
+    showError,
+    errorMessage,
+    isRequired,
+    type,
+    name,
+    children,
+    ...otherProps
+}) {
+    const [isVisible, setVisibility] = useState(false);
+    const initialType = type;
 
-function FormInput({ id, label, showError, errorMessage, hasErrorIcon, type, ...otherProps }) {
-    const [isVisible, setVisibility] = useState(false)
-    const initialType = type
-    
     return (
-        <div className="relative flex-grow">
-            <label className="block mb-1 font-light text-sm"
-                htmlFor={id}>{label}</label>
-            {type === 'textarea' ?
+        <div className="relative flex-grow flex flex-col">
+            <label className={`form-label ${isRequired ? "after:content-['*'] after:text-colorRed" : ""}`} htmlFor={id}>
+                {label}
+            </label>
+
+            {type === "textarea" ? (
                 <textarea
-                    className="border-gray-400 w-full rounded p-2 focus:border-colorPrimary focus:ring-colorPrimary h-40"
+                    className={`${showError ? "ring-2 ring-colorRed border border-colorRed" : "border"
+                        } w-full rounded p-2 focus:border-colorPrimary focus:ring-colorPrimary focus:ring-2`}
                     type={type}
                     id={id}
                     {...otherProps}
                 />
-                :
-                (<input
-                    className="border border-gray-400 w-full rounded p-2 focus:border-colorPrimary focus:ring-colorPrimary"
-                    type={isVisible? "text": initialType}
+            ) : (
+                <input
+                    className={`${showError ? "ring-2 ring-colorRed border border-colorRed" : "border"
+                        } w-full rounded p-2 focus:border-colorPrimary focus:ring-colorPrimary focus:ring-2`}
+                    type={isVisible ? "text" : initialType}
                     id={id}
+                    name={name}
                     {...otherProps}
-                />)
-            }
+                />
+            )}
 
-            {showError &&
-                (<div className="relative">
-                    <p className="text-colorRed text-sm text-right mt-1 md:mt-2 ">{errorMessage}</p>
-                    {hasErrorIcon && (<IoAlertCircleSharp className="text-colorRed absolute -top-8 md:-top-9 right-4"/>)}
-                </div>)
-            }
-            {
-                type === "password" ? (
-                    <div className="text-lg absolute top-9 right-4 cursor-pointer" onClick={() => setVisibility(!isVisible)}>
-                        {isVisible ? <GrFormViewHide /> : <GrFormView />}
-                    </div>) : null
-            }
+            <div className={`top-full flex flex-row items-center transition-all duration-100 scale-0 ${showError ? "scale-100 my-1 " : ""}`}>
+                <IoAlertCircleSharp className="text-colorRed text-lg" />
+                <p className="text-colorRed text-sm text-right">&nbsp;&nbsp;{errorMessage}</p>
+            </div>
+
+            {type === "password" ? (
+                <div
+                    className="text-lg absolute top-10 right-4 cursor-pointer"
+                    onClick={() => setVisibility(!isVisible)} >
+                    {isVisible ? <GrFormViewHide /> : <GrFormView />}
+                </div>
+            ) : null}
+            {children}
         </div>
-    )
-
+    );
 }
-function FormSelectInput({ id, label, showError, errorMessage, children, ...otherProps }) {
+
+
+function FormSelectInput({
+    id,
+    label,
+    showError,
+    errorMessage,
+    children,
+    isRequired,
+    className,
+    ...otherProps
+}) {
     return (
-        <div>
-            <label className="block mb-1 font-light text-sm" htmlFor="country">{label}</label>
+        <div className="relative flex-grow flex flex-col">
+            <label className={`form-label ${isRequired ? "after:content-['*'] after:text-colorRed" : ""}`} htmlFor={id}>{label}</label>
             <select
-                className="border border-gray-400 w-full rounded p-2 focus:border-colorPrimary focus:ring-colorPrimary"
+                className="border w-full rounded focus:border-colorPrimary focus:ring-colorPrimary focus:ring-2"
                 id={id}
                 {...otherProps}
             >
                 {children}
             </select>
 
-            {showError &&
-                (<p className="text-colorRed text-sm text-right mt-1 md:mt-2 ">{errorMessage}</p>)
-            }
+            <div className={`top-full flex flex-row items-center transition-all duration-100 scale-0 ${showError ? "scale-100 " : ""}`}>
+                <IoAlertCircleSharp className="text-colorRed text-lg" />
+                <p className="text-colorRed text-sm">&nbsp;&nbsp;{errorMessage}</p>
+            </div>
 
         </div>
-    )
+    );
 }
 
-export { FormInput, FormSelectInput }
+export { FormInput, FormSelectInput };

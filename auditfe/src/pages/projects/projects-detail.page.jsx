@@ -1,29 +1,28 @@
 import { useState, useEffect } from "react"
-import { useSelector } from "react-redux"
 import { useParams, useNavigate, Link } from "react-router-dom"
 
 import { VscIssueReopened } from "react-icons/vsc"
 import { MdPrint, MdOutlineAddCircleOutline } from "react-icons/md"
-import { FiMoreVertical } from "react-icons/fi"
 import { IoMdDoneAll } from "react-icons/io"
-
+import { useApi } from "../../context/auth.context"
 import EditableInput from "../../components/editable-input.component"
-import EditableOptions from "../../components/editable-options.component"
 import LoadingPage from "../loading.page"
-import getDjango from "../../api/django"
-
+import AddPainting from "../../components/modals/add-painting.modal"
+import { toast } from "react-toastify"
+import { toastConfig } from "../../configs/toast-config"
+import { useModal } from "../../context/modal.context"
 
 function ProjectDetailPage() {
-    const token = useSelector(state => state.user.token)
+    const django = useApi()
+
     const navigate = useNavigate()
     const { projectId } = useParams();
     const [project, setProject] = useState(null)
     const [changeData, setChangeData] = useState({})
     const [currencyArr, setCurrencyArr] = useState([])
-
+    const modal = useModal()
 
     useEffect(() => {
-        const django = getDjango(token)
         django.getProjectById(projectId).then(response => {
             if (response.status === django.SUCCESS) {
                 setProject(response.data)
@@ -32,10 +31,9 @@ function ProjectDetailPage() {
             }
         })
 
-    }, [projectId, token, navigate])
+    }, [projectId, navigate])
 
     useEffect(() => {
-        const django = getDjango(token)
         django.listCurrencies().then(response => {
             if (response.status === django.SUCCESS) {
 
@@ -46,8 +44,59 @@ function ProjectDetailPage() {
     }, [])
 
     const handleEditComplete = (value, property) => {
-        console.log("value", value)
-        console.log("property", property)
+        const formdata = {}
+        formdata[`${property}`] = value
+        django.updateProject(projectId, formdata).then(response => {
+            if (response.status === django.SUCCESS) {
+                toast(`${property} updated`, toastConfig)
+            } else {
+                toast(`${property} NOT updated`, toastConfig)
+            }
+        })
+    }
+
+    const handlePaintingEditComplete = (id, value, property) => {
+        const formdata = {}
+        formdata[`${property}`] = value
+        django.updatePainting(id, formdata).then(response => {
+            if (response.status === django.SUCCESS) {
+                toast(`${property} updated`, toastConfig)
+            } else {
+                toast(`${property} NOT updated`, toastConfig)
+            }
+        })
+    }
+
+    const handleAddPainting = () => {
+        modal.show(<AddPainting />)
+    }
+
+    const handleMarkComplete = () => {
+        django.updateProject(projectId, { in_progress: true }).then(response => {
+            if (response.status === django.SUCCESS) {
+                toast("Project Completed!", toastConfig)
+            } else {
+                toast("Project not completed!", toastConfig)
+            }
+        })
+    }
+
+    const handleReopen = () => {
+        django.updateProject(projectId, { in_progress: false }).then(response => {
+            if (response.status === django.SUCCESS) {
+                toast("Project Reopened!", toastConfig)
+            } else {
+                toast("Project not reopened!", toastConfig)
+            }
+        })
+    }
+
+    const handleInvoiceDownload = () => {
+        django.downloadInvoice(projectId).then(response => {
+            if (response.status === django.FAILURE) {
+                toast("Error occured while trying to download invoice!", toastConfig)
+            }
+        })
     }
 
 
@@ -80,26 +129,26 @@ function ProjectDetailPage() {
                         <EditableInput
                             className="font-bold text-2xl"
                             defaultText={project.fee}
-                            type="text"
-                            onEditComplete={(value) => handleEditComplete(value, "title")} />
+                            type="number"
+                            onEditComplete={(value) => handleEditComplete(value, "fee")} />
                         <p className="text-sm text-right text-colorBlack">deadline: {project.start_date}</p>
                     </div>
 
                     {/* BUTTONS */}
                     <div className="flex flex-row gap-2 justify-end flex-wrap">
                         {project.in_progress ? (
-                            <button className="bg-colorGreen text-white button-icon">
+                            <button className="bg-colorGreen text-white button-icon" onClick={handleMarkComplete}>
                                 <IoMdDoneAll />
-                                Complete project
+                                Mark Complete
                             </button>
                         ) : (
-                            <button className="bg-colorGreen text-white button-icon ">
+                            <button className="bg-colorGreen text-white button-icon" onClick={handleReopen}>
                                 <VscIssueReopened />
                                 Reopen
                             </button>
                         )}
 
-                        <button className="bg-colorSecondaryVariant text-white button-icon">
+                        <button className="bg-colorSecondaryVariant text-white button-icon" onClick={handleInvoiceDownload}>
                             <MdPrint />
                             Generate invoice
                         </button>
@@ -107,21 +156,31 @@ function ProjectDetailPage() {
 
 
                     {/* PAINTINGS */}
-                    <h2 className="font-semibold text-lg text-colorPrimary/50">Paintings</h2>
                     <div>
-                        {project.paintings.map(painting => (
-                            <div key={painting.id} className="flex flex-row items-center">
-                                <FiMoreVertical />
-                                <span className="flex-grow">{painting.name}</span>
-                                <span>{painting.price}</span>
-                            </div>
+                        <h2 className="font-semibold text-lg text-colorPrimary/50">Paintings</h2>
+                        <div>
+                            {project.paintings.map(painting => (
+                                <div key={painting.id} className="flex flex-row justify-between">
+                                    <EditableInput
+                                        defaultText={painting.name}
+                                        type="text"
+                                        onEditComplete={(value) => handlePaintingEditComplete(painting.id, value, "name")} />
 
-                        ))}
+                                    <EditableInput
+                                        defaultText={Number.parseInt(painting.price)}
+                                        type="number"
+                                        onEditComplete={(value) => handlePaintingEditComplete(painting.id, value, "price")} />
+                                </div>
+                            ))}
+                        </div>
+                        <button
+                            onClick={handleAddPainting}
+                            className="button-icon rounded-full my-5 justify-center bg-colorPrimaryVariant text-colorPrimary">
+
+                            <MdOutlineAddCircleOutline />
+                            <span>Add Painting</span>
+                        </button>
                     </div>
-                    <button className="button-icon rounded-full justify-center bg-colorSecondary text-colorPrimary w-1/2">
-                        <MdOutlineAddCircleOutline />
-                        Add Painting
-                    </button>
 
                 </div>
                 : <LoadingPage />

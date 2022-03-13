@@ -39,7 +39,6 @@ function EditableInput({ onEditComplete, defaultText, type, className }) {
     }
 
     const handleCancel = () => {
-        console.log("cancelled")
         setValue(defaultText)
         toggleMode()
     }
