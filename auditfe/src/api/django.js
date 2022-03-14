@@ -10,6 +10,36 @@ class DjangoClient {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
+    // PROJECT CRUD
+    async addProject(formData) {
+        await this.sleep(2000)
+        return ({
+            status: this.SUCCESS,
+            data: {
+                id: 1,
+                title: "The Fishermen",
+                client: {
+                    id: "1",
+                    name: "Macmillan",
+                    representative: "Sodiq Foga",
+                    is_company: true,
+                    address_line_1: "No1 Oju Elegba Str",
+                    address_line_2: "Idi Ape, Ejigbo",
+                    address_line_3: "Osun State, Nigeria",
+                    vendor_number: "X22304TY"
+                },
+                start_date: "2022-01-01",
+                end_date: null,
+                fee: 1500.00,
+                fee_currency: "USD",
+                in_progress: true,
+                paintings: [
+                    { id: 1, name: "The Girl with the Pearl Earring", price: "400" },
+                    { id: 2, name: "Manchester by the Sea", price: "1100" }
+                ]
+            }
+        })
+    }
 
     async getProjectById(projectId) {
         await this.sleep(2000)
@@ -175,29 +205,6 @@ class DjangoClient {
             data: 47
         })
     }
-    async listCurrencies() {
-        return {
-            status: this.SUCCESS,
-            data: ['USD, EUR, NGN, GBP']
-        }
-    }
-
-    async getClientById(clientId) {
-        await this.sleep(2000)
-        return ({
-            status: this.SUCCESS,
-            data: {
-                id: "1",
-                name: "Macmillan",
-                representative: "Sodiq Foga",
-                is_company: true,
-                address_line_1: "No1 Oju Elegba Str",
-                address_line_2: "Idi Ape, Ejigbo",
-                address_line_3: "Osun State, Nigeria",
-                vendor_number: "X22304TY"
-            }
-        })
-    }
 
     async updatePainting(paintingId, formData) {
         await this.sleep(1000)
@@ -224,6 +231,72 @@ class DjangoClient {
             data: { message: "Internal server error" }
         })
     }
+
+    // GENERAL
+    async listCurrencies() {
+        return {
+            status: this.SUCCESS,
+            data: ['USD', 'EUR', 'NGN', 'GBP']
+        }
+    }
+
+    // CLIENT CRUD
+    async getClientById(clientId) {
+        await this.sleep(2000)
+        return ({
+            status: this.SUCCESS,
+            data: {
+                id: "1",
+                name: "Macmillan",
+                representative: "Sodiq Foga",
+                is_company: true,
+                address_line_1: "No1 Oju Elegba Str",
+                address_line_2: "Idi Ape, Ejigbo",
+                address_line_3: "Osun State, Nigeria",
+                vendor_number: "X22304TY"
+            }
+        })
+    }
+
+    async listClients() {
+        await this.sleep(2000)
+        return ({
+            status: this.SUCCESS,
+            data: [
+                {
+                    id: "1",
+                    name: "Macmillan",
+                    representative: "Sodiq Foga",
+                    is_company: true,
+                    address_line_1: "No1 Oju Elegba Str",
+                    address_line_2: "Idi Ape, Ejigbo",
+                    address_line_3: "Osun State, Nigeria",
+                    vendor_number: "X22304TY"
+                },
+                {
+                    id: "2",
+                    name: "Penguin Random House",
+                    representative: "Sodiq Foga",
+                    is_company: true,
+                    address_line_1: "No1 Oju Elegba Str",
+                    address_line_2: "Idi Ape, Ejigbo",
+                    address_line_3: "Osun State, Nigeria",
+                    vendor_number: "X22304TY"
+                },
+                {
+                    id: "3",
+                    name: "Photoshop",
+                    representative: "Sodiq Foga",
+                    is_company: true,
+                    address_line_1: "No1 Oju Elegba Str",
+                    address_line_2: "Idi Ape, Ejigbo",
+                    address_line_3: "Osun State, Nigeria",
+                    vendor_number: "X22304TY"
+                }
+            ]
+        })
+    }
+
 
 }
 const getDjango = token => new DjangoClient()
