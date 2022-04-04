@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { toastConfig } from "../../configs/toast-config";
 import { toast } from "react-toastify";
@@ -9,35 +9,31 @@ import Chart from 'react-apexcharts'
 import { usePeriod } from "../../context/period.context"
 import { CgOpenCollective } from 'react-icons/cg'
 import { BsStars } from "react-icons/bs"
-import { MdOutlineDoneAll, MdOutlineAddCircleOutline } from 'react-icons/md'
+import { MdOutlineDoneAll, MdOutlineAddCircleOutline, MdSearch } from 'react-icons/md'
+import { useApi } from "../../context/auth.context";
 
 import { groupBy } from "../../configs/utils";
-import getDjango from "../../api/django"
 import ProjectCard from "../../components/projects/project-card.component"
 import { FormInput } from "../../components/form-input.component";
 
 
 function ProjectsIndex() {
-    const token = useSelector(state => state.user.token)
     const period = usePeriod()
     const [projectArr, setProjectArr] = useState([])
-    const [searchParams, setSearchParams] = useState("")
+    const [searchParams] = useSearchParams();
+    const [searchQuery, setSearchQuery] = useState("")
     const [totalProjectCount, setTotalProjectCount] = useState(0)
+    const django = useApi()
 
     useEffect(() => {
-        const django = getDjango(token)
         django.listProjects(period).then(response => {
             if (response.status === django.SUCCESS) {
                 setProjectArr(response.data)
-            } else {
-                console.log("Error=>", response.data)
-                toast.error("Unable to get Projects", toastConfig)
             }
         })
-    }, [token])
+    }, [django, period])
 
     useEffect(() => {
-        const django = getDjango(token)
         django.getAllTimeProjectCount().then(response => {
             if (response.status === django.SUCCESS) {
                 setTotalProjectCount(response.data)
@@ -45,8 +41,14 @@ function ProjectsIndex() {
                 toast.error("Unable to get Projects", toastConfig)
             }
         })
-
     })
+
+    useEffect(() => {
+        const searchedValue = searchParams.get("q")
+        if (searchedValue) {
+            setSearchQuery(searchedValue)
+        }
+    }, [searchParams])
 
 
     const makeTreeChartArr = () => {
@@ -85,9 +87,8 @@ function ProjectsIndex() {
         series: [{ data: makeTreeChartArr() }]
     }
 
-    const handleSearchQueryChange = event => {
-        setSearchParams(event.target.value)
-        console.log(event.target.value)
+    const handleSearchChange = event => {
+        setSearchQuery(event.target.value)
     }
 
     return (
@@ -120,20 +121,24 @@ function ProjectsIndex() {
 
             </div>
 
-            <div className="flex flex-row justify-between items-center mt-20 flex-wrap  ">
-                <h1 className="text-colorPrimary/50 font-semibold text-2xl flex-grow">All Projects</h1>
-                <div className="w-1/2 mx-5">
-                    <FormInput
-                        id="search-projects"
-                        type="search"
-                        value={searchParams}
-                        onChange={handleSearchQueryChange}
-                        placeholder="search projects.."
-                    />
-                </div>
+            <div className="flex flex-row flex-wrap gap-4 mt-10">
+                <h1 className="text-colorPrimary/50 font-semibold text-2xl">All Projects</h1>
+                <form className="relative flex-grow">
+                    <label htmlFor="client-search" className="absolute top-1/2 -translate-y-1/2 left-2">
+                        <MdSearch className="text-2xl" />
+                    </label>
+                    <input
+                        id="client-search"
+                        type="text"
+                        name="q"
+                        placeholder="Search by Project name"
+                        className="focus:border-colorPrimary focus:ring-colorPrimary focus:ring-2 pl-8 w-full"
+                        value={searchQuery}
+                        onChange={handleSearchChange} />
+                </form>
                 <Link to="new" className="button-icon rounded-full bg-colorSecondary text-colorPrimary">
                     <MdOutlineAddCircleOutline className="inline text-lg" />
-                    <span>Add New Project</span>
+                    <span>New Project</span>
                 </Link>
             </div>
 

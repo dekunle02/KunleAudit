@@ -31,8 +31,8 @@ export function AuthProvider({ children }) {
         const auth = getAuth()
         auth.validateToken(token).then(response => {
             if (response.status === auth.SUCCESS) {
-                setAuthState(AuthStates.SUCCESS)
                 setApi(getDjango(token))
+                setAuthState(AuthStates.SUCCESS)
             } else {
                 setAuthState(AuthStates.FAILURE)
             }
