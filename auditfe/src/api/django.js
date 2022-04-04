@@ -264,7 +264,7 @@ class DjangoClient {
             status: this.SUCCESS,
             data: [
                 {
-                    id: "1",
+                    id: "client-1",
                     name: "Macmillan",
                     representative: "Sodiq Foga",
                     is_company: true,
@@ -274,7 +274,7 @@ class DjangoClient {
                     vendor_number: "X22304TY"
                 },
                 {
-                    id: "2",
+                    id: "client-2",
                     name: "Penguin Random House",
                     representative: "Sodiq Foga",
                     is_company: true,
@@ -284,7 +284,7 @@ class DjangoClient {
                     vendor_number: "X22304TY"
                 },
                 {
-                    id: "3",
+                    id: "client-3",
                     name: "Photoshop",
                     representative: "Sodiq Foga",
                     is_company: true,

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
 import { useApi } from "../../context/auth.context";
 import { Link, useSearchParams } from "react-router-dom"
-
+import ClientCard from "../../components/projects/client-card.component";
 import { MdOutlineAddCircleOutline, MdSearch } from "react-icons/md"
 
 
 function ClientsIndex() {
+    const [fullClientArr, setFullClientArr] = useState([])
     const [clientArr, setClientArr] = useState([])
     const [searchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState("")
@@ -14,22 +15,26 @@ function ClientsIndex() {
     useEffect(() => {
         django.listClients().then(response => {
             if (response.status === django.SUCCESS) {
-                setClientArr(response.data)
+                setFullClientArr(response.data)
             }
         })
     }, [django])
 
     useEffect(() => {
         const searchedValue = searchParams.get("q")
-        if (searchedValue) {
+        if (searchedValue && searchedValue !== "") {
             setSearchQuery(searchedValue)
+            const filteredClients = fullClientArr.filter(client => client.name.toLowerCase().includes(searchedValue.toLowerCase()))
+            setClientArr(filteredClients)
+        } else {
+            setClientArr(fullClientArr)
         }
-    }, [searchParams])
+
+    }, [fullClientArr, searchParams])
 
     const handleSearchChange = event => {
         setSearchQuery(event.target.value)
     }
-
 
     return (
         <div>
@@ -52,6 +57,18 @@ function ClientsIndex() {
                     <span>Add New Client</span>
                 </Link>
             </div>
+            {fullClientArr.length < 1 && (
+                <h3 className="text-center text-xl text-colorPrimary/30 font-semibold">.....</h3>
+            )}
+            {fullClientArr.length > 1 && clientArr.length < 1 && (
+                <h3 className="text-center text-xl text-colorPrimary/30 font-semibold">No Client matches query..</h3>
+            )}
+
+            {clientArr.map(client => (
+                <div key={client.id}>
+                    <ClientCard client={client} />
+                </div>
+            ))}
 
         </div>
     )
